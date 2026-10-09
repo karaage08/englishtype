@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>🌈 English Typing Game 🌈</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    padding:20px;
+    min-height:100vh;
+
+    font-family:"Yu Gothic","Meiryo",sans-serif;
+
+    background:
+    linear-gradient(
+        135deg,
+        #dff4ff 0%,
+        #eef9ff 50%,
+        #fff7d8 100%
+    );
+}
+
+.container{
+    max-width:800px;
+    margin:auto;
+}
+
+.hidden{
+    display:none;
+}
+
+.card{
+
+    background:white;
+
+    border-radius:30px;
+
+    padding:30px;
+
+    box-shadow:
+    0 10px 25px
+    rgba(0,0,0,0.12);
+
+    text-align:center;
+
+}
+
+.gameTitle{
+
+    font-size:2.3rem;
+    color:#345;
+    margin-bottom:10px;
+
+}
+
+.subTitle{
+
+    color:#567;
+    margin-bottom:30px;
+
+}
+
+.levelBtn{
+
+    width:100%;
+
+    margin:12px 0;
+
+    padding:18px;
+
+    border:none;
+
+    border-radius:20px;
+
+    cursor:pointer;
+
+    font-size:1.1rem;
+
+    font-weight:bold;
+
+    color:#334;
+
+    background:
+    linear-gradient(
+        135deg,
+        #ffd6e7,
+        #ffe8a3
+    );
+
+    transition:0.2s;
+
+}
+
+.levelBtn:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:
+    0 6px 15px
+    rgba(0,0,0,0.15);
+
+}
+
+.startBtn{
+
+    margin-top:20px;
+
+    padding:14px 30px;
+
+    border:none;
+
+    border-radius:999px;
+
+    background:
+    linear-gradient(
+        135deg,
+        #6cc5ff,
+        #4aa3ff
+    );
+
+    color:white;
+
+    font-size:20px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+}
+
+.startBtn:hover{
+
+    transform:scale(1.04);
+
+}
+
+#selectedLevel{
+
+    margin-top:20px;
+
+    font-size:20px;
+
+    font-weight:bold;
+
+    color:#456;
+
+}
+
+.info{
+
+    display:inline-block;
+
+    background:#f1f8ff;
+
+    padding:10px 18px;
+
+    border-radius:999px;
+
+    margin:5px;
+
+    font-size:18px;
+
+    color:#345;
+
+}
+
+#japanese{
+
+    margin-top:25px;
+
+    font-size:42px;
+
+    font-weight:bold;
+
+    color:#223;
+
+}
+
+#hint{
+
+    margin:25px 0;
+
+    min-height:60px;
+
+    font-size:34px;
+
+    letter-spacing:8px;
+
+    color:#355;
+
+}
+
+#typingInput{
+
+    width:350px;
+
+    max-width:90%;
+
+    font-size:28px;
+
+    text-align:center;
+
+    padding:14px;
+
+    border-radius:16px;
+
+    border:3px solid #9bd4ff;
+
+    outline:none;
+}
+
+#typingInput:focus{
+
+    border-color:#5baeff;
+
+    box-shadow:
+    0 0 15px
+    rgba(91,174,255,.3);
+
+}
+
+#correctEffect{
+
+    height:45px;
+
+    margin-top:15px;
+
+    font-size:28px;
+
+    font-weight:bold;
+
+    color:#22aa66;
+
+}
+
+#result{
+
+    text-align:left;
+
+    line-height:1.8;
+}
+
+.sectionTitle{
+
+    margin-top:20px;
+
+    font-size:22px;
+
+    font-weight:bold;
+
+    color:#334;
+}
+
+.good{
+
+    color:#22aa66;
+}
+
+.bad{
+
+    color:#ff7a59;
+}
+
+.retryBtn{
+
+    margin-top:20px;
+
+    padding:14px 25px;
+
+    border:none;
+
+    border-radius:999px;
+
+    background:
+    linear-gradient(
+        135deg,
+        #6cc5ff,
+        #4aa3ff
+    );
+
+    color:white;
+
+    font-size:18px;
+
+    cursor:pointer;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- スタート画面 -->
+
+<div id="startScreen" class="card">
+
+<h1 class="gameTitle">
+🌈 English Typing Game 🌈
+</h1>
+
+<p class="subTitle">
+日本語を見て英単語をタイピングしよう！
+</p>
+
+<h2>難易度を選んでください</h2>
+
+<button
+class="levelBtn"
+onclick="setLevel(1)"
+>
+🌟 <br>
+たくさんヒントが出る
+</button>
+
+<button
+class="levelBtn"
+onclick="setLevel(2)"
+>
+🌟🌟 <br>
+最初の1文字がヒント
+</button>
+
+<button
+class="levelBtn"
+onclick="setLevel(3)"
+>
+🌟🌟🌟 <br>
+ヒントなし
+</button>
+
+<button
+class="levelBtn"
+onclick="setLevel(4)"
+>
+🏆 <br>
+タイムチャレンジ
+</button>
+
+<p id="selectedLevel">
+難易度：未選択
+</p>
+
+<button
+class="startBtn"
+onclick="startGame()"
+>
+スタート
+</button>
+
+</div>
+
+<!-- ゲーム画面 -->
+
+<div
+id="gameScreen"
+class="card hidden"
+>
+
+<div class="info">
+問題 <span id="questionNo">1</span>/10
+</div>
+
+<div class="info">
+⏱ <span id="timer">0</span>秒
+</div>
+
+<div class="info">
+❌ <span id="miss">0</span>回
+</div>
+
+<div id="japanese"></div>
+
+<div id="hint"></div>
+
+<input
+type="text"
+id="typingInput"
+autocomplete="off"
+autocorrect="off"
+autocapitalize="off"
+spellcheck="false"
+>
+
+<div id="correctEffect"></div>
+
+<br>
+
+<button
+class="retryBtn"
+onclick="passQuestion()"
+>
+⏭ パス
+</button>
+
+</div>
+
+<!-- 結果画面 -->
+
+<div
+id="resultScreen"
+class="card hidden"
+>
+
+<h1>
+🎉 ゲーム終了 🎉
+</h1>
+
+<div id="result"></div>
+
+<button
+class="retryBtn"
+onclick="location.reload()"
+>
+もう一度遊ぶ
+</button>
+
+</div>
+
+</div>
+
+<script>
+
+// ===== ゲーム変数 =====
+
+let level = 0;
+let timer = 0;
+let miss = 0;
+let current = 0;
+let correct = 0;
+
+let timerId;
+
+let quiz = [];
+
+let completedWords = [];
+let missedWords = [];
+let passedWords = [];
+
+let passCount = 0;
+
+// ===== 単語データ =====
+
+const words = [
+
+{jp:"来る",en:"come"},
+{jp:"到着する",en:"arrive"},
+{jp:"着く",en:"reach"},
+{jp:"始める",en:"begin"},
+{jp:"終える",en:"finish"},
+{jp:"前に",en:"before"},
+{jp:"昨日（きのう）",en:"yesterday"},
+{jp:"明日（あした）",en:"tomorrow"},
+{jp:"いつも",en:"always"},
+
+{jp:"晴れ",en:"sunny"},
+{jp:"くもり",en:"cloudy"},
+{jp:"天気（てんき）",en:"weather"},
+
+{jp:"知っている",en:"know"},
+{jp:"眠る",en:"sleep"},
+{jp:"水（みず）",en:"water"},
+{jp:"野菜（やさい）",en:"vegetable"},
+
+{jp:"会う",en:"meet"},
+{jp:"話す",en:"speak"},
+{jp:"掃除する",en:"clean"},
+{jp:"休憩",en:"break"},
+
+{jp:"先生（せんせい）",en:"teacher"},
+{jp:"学ぶ",en:"learn"},
+
+{jp:"何",en:"what"},
+{jp:"どちら",en:"which"},
+{jp:"誰",en:"who"},
+{jp:"誰の",en:"whose"},
+{jp:"いつ",en:"when"},
+{jp:"どこ",en:"where"},
+{jp:"なぜ",en:"why"},
+{jp:"どうやって",en:"how"},
+
+{jp:"立つ",en:"stand"},
+{jp:"開ける",en:"open"},
+{jp:"扇風機（せんぷうき）",en:"fan"},
+{jp:"趣味（しゅみ）",en:"hobby"},
+{jp:"映画（えいが）",en:"movie"},
+
+{jp:"犬（いぬ）",en:"dog"},
+{jp:"うさぎ",en:"rabbit"},
+{jp:"羊（ひつじ）",en:"sheep"},
+
+{jp:"母（はは）",en:"mother"},
+{jp:"父（ちち）",en:"father"},
+
+{jp:"空（そら）",en:"sky"},
+{jp:"雲（くも）",en:"cloud"},
+{jp:"山（やま）",en:"mountain"},
+
+{jp:"美しい（うつくしい）",en:"beautiful"},
+{jp:"古い（ふるい）",en:"old"},
+{jp:"若い（わかい）",en:"young"},
+{jp:"新しい（あたらしい）",en:"new"},
+{jp:"弱い（よわい）",en:"weak"},
+
+{jp:"見る",en:"watch"},
+{jp:"聞く",en:"listen"},
+{jp:"触る",en:"touch"},
+{jp:"時間（じかん）",en:"time"},
+
+{jp:"後ろ（うしろ）",en:"back"},
+{jp:"中央（ちゅうおう）",en:"center"},
+{jp:"離れて",en:"away"},
+{jp:"前（まえ）",en:"front"},
+{jp:"近く",en:"near"},
+{jp:"真ん中",en:"middle"}
+
+];
+
+
+// ===== 難易度選択 =====
+
+function setLevel(l){
+
+    level = l;
+
+    document.getElementById("selectedLevel").textContent =
+    "難易度：" + "★".repeat(l);
+
+}
+
+
+// ===== シャッフル =====
+
+function shuffle(arr){
+
+    return [...arr].sort(
+        () => Math.random() - 0.5
+    );
+
+}
+
+
+// ===== ゲーム開始 =====
+
+function startGame(){
+
+    if(level === 0){
+
+        alert("難易度を選んでください");
+
+        return;
+    }
+
+    current = 0;
+    correct = 0;
+    miss = 0;
+    timer = 0;
+
+completedWords = [];
+missedWords = [];
+passedWords = [];
+
+passCount = 0;
+
+    quiz = shuffle(words).slice(0,10);
+
+    document.getElementById(
+        "startScreen"
+    ).classList.add("hidden");
+
+    document.getElementById(
+        "gameScreen"
+    ).classList.remove("hidden");
+
+    document.getElementById(
+        "miss"
+    ).textContent = 0;
+
+    timerId = setInterval(() => {
+
+        timer++;
+
+        document.getElementById(
+            "timer"
+        ).textContent = timer;
+
+    },1000);
+
+    loadQuestion();
+
+}
+
+
+// ===== 問題表示 =====
+
+function loadQuestion(){
+
+    const q = quiz[current];
+
+    document.getElementById(
+        "questionNo"
+    ).textContent = current + 1;
+
+    document.getElementById(
+        "japanese"
+    ).textContent = q.jp;
+
+    document.getElementById(
+        "typingInput"
+    ).value = "";
+
+    document.getElementById(
+        "correctEffect"
+    ).textContent = "";
+
+    document.getElementById(
+        "typingInput"
+    ).focus();
+
+    document.getElementById(
+        "hint"
+    ).textContent =
+    makeHint(
+        q.en,
+        ""
+    );
+
+}
+
+// ===== ヒント表示 =====
+
+function makeHint(word,input){
+
+    let result = "";
+
+    for(let i=0;i<word.length;i++){
+
+        // 入力済み文字
+
+        if(i < input.length){
+
+            result += word[i] + " ";
+        }
+
+        else{
+
+            // ★
+
+            if(level === 1){
+
+                if(
+                    i === 0 ||
+                    i === 2 ||
+                    i === word.length - 1
+                ){
+
+                    result += word[i] + " ";
+
+                }else{
+
+                    result += "_ ";
+                }
+
+            }
+
+            // ★★
+
+            else if(level === 2){
+
+                if(i === 0){
+
+                    result += word[i] + " ";
+
+                }else{
+
+                    result += "_ ";
+                }
+
+            }
+
+            // ★★★ ★★★★
+
+            else{
+
+                result += "_ ";
+
+            }
+
+        }
+
+    }
+
+    return result;
+
+}
+
+
+// ===== 入力判定 =====
+
+document.getElementById(
+    "typingInput"
+).addEventListener(
+    "input",
+    function(){
+
+        let input =
+        this.value.toLowerCase();
+
+        let answer =
+        quiz[current].en.toLowerCase();
+
+        // ミス判定
+
+        for(
+            let i=0;
+            i<input.length;
+            i++
+        ){
+
+            if(
+                input[i] !== answer[i]
+            ){
+
+                miss++;
+
+                document.getElementById(
+                    "miss"
+                ).textContent = miss;
+
+                // ミス単語登録
+
+                if(
+                    !missedWords.some(
+                        w =>
+                        w.en === answer
+                    )
+                ){
+
+                    missedWords.push({
+
+                        jp: quiz[current].jp,
+
+                        en: answer
+
+                    });
+
+                }
+
+                this.value =
+                input.slice(0,-1);
+
+                return;
+
+            }
+
+        }
+
+        // ヒント更新
+
+        document.getElementById(
+            "hint"
+        ).textContent =
+        makeHint(
+            answer,
+            input
+        );
+
+        // 正解
+
+        if(
+            input === answer
+        ){
+
+            completedWords.push({
+
+                jp: quiz[current].jp,
+
+                en: answer
+
+            });
+
+            document.getElementById(
+                "correctEffect"
+            ).textContent =
+            "🎉 Correct!";
+
+            correct++;
+
+            setTimeout(()=>{
+
+                current++;
+
+                if(
+                    current >= 10
+                ){
+
+                    finishGame();
+
+                }else{
+
+                    loadQuestion();
+
+                }
+
+            },500);
+
+        }
+
+    }
+);
+
+// ===== ゲーム終了 =====
+
+function passQuestion(){
+
+    passCount++;
+
+    passedWords.push({
+
+        jp: quiz[current].jp,
+        en: quiz[current].en
+
+    });
+
+    current++;
+
+    if(current >= 10){
+
+        finishGame();
+
+    }else{
+
+        loadQuestion();
+
+    }
+
+}
+
+function finishGame(){
+
+    clearInterval(timerId);
+
+    document.getElementById(
+        "gameScreen"
+    ).classList.add("hidden");
+
+    document.getElementById(
+        "resultScreen"
+    ).classList.remove("hidden");
+
+    const rate =
+    Math.round(
+        (correct / 10) * 100
+    );
+
+    let rank = "D";
+
+    if(rate >= 90){
+
+        rank = "S";
+
+    }else if(rate >= 80){
+
+        rank = "A";
+
+    }else if(rate >= 70){
+
+        rank = "B";
+
+    }else if(rate >= 60){
+
+        rank = "C";
+
+    }
+
+    let completedHTML =
+    completedWords
+    .map(w =>
+        `✅ ${w.jp} ： ${w.en}`
+    )
+    .join("<br>");
+
+let passedHTML = "";
+
+if(passedWords.length > 0){
+
+    passedHTML =
+    passedWords
+    .map(w =>
+        `⏭ ${w.jp} ： ${w.en}`
+    )
+    .join("<br>");
+
+}else{
+
+    passedHTML =
+    "パスなし！";
+
+}
+
+    let missedHTML = "";
+
+    if(
+        missedWords.length > 0
+    ){
+
+        missedHTML =
+        missedWords
+        .map(w =>
+            `🍀 ${w.jp} ： ${w.en}`
+        )
+        .join("<br>");
+
+    }else{
+
+        missedHTML =
+        "ミスなし！すばらしい！🎉";
+
+    }
+
+    let challengeText = "";
+
+    if(level === 4){
+
+        challengeText =
+        "<br>🏆 タイムチャレンジ";
+    }
+
+    document.getElementById(
+        "result"
+    ).innerHTML =
+
+    `
+    <div class="sectionTitle">
+    📊 結果
+    </div>
+
+    難易度：
+    ${"★".repeat(level)}
+    ${challengeText}
+
+    <br>
+
+    正答率：
+    ${rate}%
+
+    <br>
+
+    タイム：
+    ${timer}秒
+
+    <br>
+
+    ミス：
+    ${miss}回
+
+<br>
+
+    パス：
+    ${passCount}回
+
+    <br>
+
+    ランク：
+    <span class="good">
+    ${rank}
+    </span>
+
+    <div class="sectionTitle">
+    📝 打った単語一覧
+    </div>
+
+    ${completedHTML}
+
+ <div class="sectionTitle">
+🍀 ミスした単語
+</div>
+
+${missedHTML}
+
+<div class="sectionTitle">
+⏭ パスした単語
+</div>
+
+${passedHTML}
+`;
+}
+
+</script>
+
+</body>
+</html>
